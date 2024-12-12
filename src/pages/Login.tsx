@@ -9,10 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import PHForm from "../components/form/PHForm";
 import PHInput from "../components/form/PHInput";
+import Cookie from "js-cookie";
+import CryptoJS from "crypto-js";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const key = "secret-key";
 
   const [login] = useLoginMutation();
 
@@ -31,7 +34,17 @@ const Login = () => {
       const res = await login(userInfo).unwrap();
       const user = verifyToken(res.data.accessToken) as TUser;
       dispatch(setUser({ user: user, token: res.data.accessToken }));
+      const encryptedToken = CryptoJS.AES.encrypt(
+        res.data.accessToken,
+        key
+      ).toString();
+      Cookie.set("access-token", encryptedToken);
+      const result = Cookie.get("access-token");
+      const bytes = CryptoJS.AES.decrypt(result as string, key);
+      const originalToken = bytes.toString(CryptoJS.enc.Utf8);
+      console.log(originalToken);
       navigate(`/${user.role}/dashboard`);
+
       toast.success("Login successful", { id: toastId, duration: 2000 });
     } catch (error) {
       toast.error("Login failed", { id: toastId, duration: 2000 });

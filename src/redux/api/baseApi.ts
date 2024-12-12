@@ -8,12 +8,18 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { logout, setUser } from "../features/auth/authSlice";
+import { toast } from "sonner";
+import Cookie from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/v1",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
+    const accessToken = Cookie.get("access-token");
+
+    console.log(accessToken);
+
     if (token) {
       headers.set("authorization", `${token}`);
     }
@@ -28,6 +34,11 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   DefinitionType
 > = async (args, api, extraOptions): Promise<any> => {
   let result = await baseQuery(args, api, extraOptions);
+
+  if (result.error?.status === 404) {
+    toast.error("User not found", { duration: 2000 });
+  }
+
   if (result.error?.status === 401) {
     console.log("Sending refresh token");
     //* Send refresh token to get new access token
