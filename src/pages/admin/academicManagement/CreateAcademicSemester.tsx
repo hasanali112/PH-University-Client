@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import PHForm from "../../../components/form/PHForm";
 import { Button, Col, Flex } from "antd";
@@ -31,7 +32,7 @@ const CreateAcademicSemester = () => {
     };
     try {
       console.log(semesterData);
-      const res = (await addAcademicSemester(semesterData)) as TResponse;
+      const res = (await addAcademicSemester(semesterData)) as TResponse<any>;
       console.log(res);
       if (res.error) {
         toast.error(res.error.data.message, { id: toastId });
