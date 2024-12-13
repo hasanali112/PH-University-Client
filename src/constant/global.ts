@@ -22,3 +22,17 @@ export type TQueryParams = {
   name: string;
   value: boolean | React.Key;
 };
+
+export const genders = ["Male", "Female", "Other"];
+
+export const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+export const bloodGroupOptions = bloodGroups.map((bloodGroup) => ({
+  value: bloodGroup,
+  label: bloodGroup,
+}));
+
+export const gendersOptions = genders.map((gender) => ({
+  value: gender,
+  label: gender,
+}));
