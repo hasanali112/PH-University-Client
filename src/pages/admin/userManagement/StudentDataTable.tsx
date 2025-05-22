@@ -11,7 +11,10 @@ import { TQueryParams } from "../../../constant/global";
 import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManagement.api";
 import { TStudent } from "../../../types";
 
-export type TTableData = Pick<TStudent, "fullName" | "id">;
+export type TTableData = Pick<
+  TStudent,
+  "fullName" | "id" | "email" | "contactNo"
+>;
 
 const StudentDataTable = () => {
   const [params, setParams] = useState<TQueryParams[]>([]);
@@ -28,11 +31,15 @@ const StudentDataTable = () => {
 
   const metaData = studentData?.meta;
 
-  const tableData = studentData?.data?.map(({ _id, fullName, id }) => ({
-    key: _id,
-    fullName,
-    id,
-  }));
+  const tableData = studentData?.data?.map(
+    ({ _id, fullName, id, contactNo, email }) => ({
+      key: _id,
+      fullName,
+      id,
+      contactNo,
+      email,
+    })
+  );
 
   const columns: TableColumnsType<TTableData> = [
     {
@@ -45,7 +52,17 @@ const StudentDataTable = () => {
       key: "id",
       dataIndex: "id",
     },
+    {
+      title: "Email",
+      key: "eamil",
+      dataIndex: "email",
+    },
 
+    {
+      title: "Contact No.",
+      key: "contactNo",
+      dataIndex: "contactNo",
+    },
     {
       title: "Action",
       key: "x",
